@@ -1,0 +1,35 @@
+{
+  "item.reworked_netherite.raw_netherite": "Raw Netherite",
+  "item.reworked_netherite.netherite_hammer": "Netherite Hammer",
+  "item.reworked_netherite.netherite_bow": "Netherite Bow",
+  "item.reworked_netherite.netherite_core": "Netherite Core",
+  "item.reworked_netherite.flatten_netherite_ingot": "Flatten Netherite Ingot",
+  "item.reworked_netherite.wither_bone": "Wither Bone",
+  "item.reworked_netherite.soul_crystal": "Soul Crystal",
+  "item.reworked_netherite.molten_netherite_bucket": "Molten Netherite",
+
+
+  "block.reworked_netherite.netherite_ore": "Netherite Ore",
+  "block.reworked_netherite.deepslate_netherite_ore": "Deepslate Netherite Ore",
+  "block.reworked_netherite.end_stone_netherite_ore": "Endstone Netherite Ore",
+  "block.reworked_netherite.stone_netherite_ore": "Stone Netherite Ore",
+  "block.reworked_netherite.raw_netherite_block": "Raw Netherite Block",
+
+  "itemGroup.reworked_netherite.blocks": "Reworked Netherite: Blocks",
+  "itemGroup.reworked_netherite.items": "Reworked Netherite: Items",
+  "item.mod.reworked_netherite.captured": "The entitiy their soul has been absorbed by the crystal you are holding...",
+
+
+  "text.autoconfig.reworked_netherite.category.default": "General Options",
+  "text.autoconfig.reworked_netherite.category.worldGenOptions": "World Generation Options",
+  "text.autoconfig.reworked_netherite.title": "Simple Netherite config options",
+  "text.autoconfig.reworked_netherite.option.isWorldGenEnabled": "isWorldGenEnabled",
+
+  "text.autoconfig.reworked_netherite.option.name": "Name of the mod!",
+
+  "enchantment.reworked_netherite.polished": "Polished",
+  "category.reworked_netherite": "Reworked Netherite",
+  "key.reworked_netherite.heal": "Heal player from souls..."
+
+
+}
