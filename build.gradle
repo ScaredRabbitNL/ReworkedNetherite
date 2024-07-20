@@ -1,0 +1,147 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
+plugins {
+	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'maven-publish'
+	id "com.modrinth.minotaur" version "2.+"
+	id 'net.darkhax.curseforgegradle' version '1.1.24'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = "[$project.name] $rootProject.archives_name"
+}
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+
+	maven { url = "https://maven.resourcefulbees.com/repository/maven-public/" }
+	maven {
+		name = "Terraformers"
+		url = "https://maven.terraformersmc.com/"
+	}
+	maven { url "https://maven.shedaniel.me/" }
+	maven { url "https://maven.terraformersmc.com/releases/" }
+}
+
+fabricApi {
+	configureDataGeneration()
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+	modImplementation "com.teamresourceful.resourcefullib:resourcefullib-fabric-${rootProject.minecraft_version}:${rootProject.resourcefullib_version}"
+
+
+
+
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_name
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+
+	// This token is used to authenticate with CurseForge. It should be handled
+	// with the same level of care and security as your actual password. You
+	// should never share your token with an untrusted source or publish it
+	// publicly to GitHub or embed it within a project. The best practice is to
+	// store this token in an environment variable or a build secret.
+	apiToken = providers.gradleProperty("curseforgeAPIToken")
+
+	// A project ID is required to tell CurseForge which project the uploaded
+	// file belongs to. This is public on your project page and is not private
+	// information.
+	def projectId = rootProject.curse_id
+
+	// Tells CurseForgeGradle to publish the output of the jar task. This will
+	// return a UploadArtifact object that can be used to further configure the
+	// file.
+	def mainFile = upload(projectId, file("build/libs/[$project.name] ${rootProject.archives_name}-${version}.jar"))
+	mainFile.changelog = project(":").file("CHANGELOG.md").absoluteFile
+	mainFile.releaseType = 'release'
+	mainFile.addGameVersion('1.20.4')
+	mainFile.changelogType = 'markdown'
+	mainFile.displayName = "[$project.name] $version"
+	mainFile.addRequirement("resourceful-lib")
+	mainFile.addRequirement("architectury-api")
+	mainFile.addModLoader("Fabric")
+
+
+}
+modrinth {
+
+
+
+
+
+	token = providers.gradleProperty("modrinthAPIToken") // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
+	projectId = "$rootProject.modrinth_id" // This can be the project ID or the slug. Either will work!
+	changelog = rootProject.file("CHANGELOG.md").getText()
+	versionNumber = "${rootProject.version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+	versionType = "release" // This is the default -- can also be `beta` or `alpha`
+	uploadFile = file("build/libs/[$project.name] ${rootProject.archives_name} ${version}.jar") // With Loom, this MUST be set to `remapJar` instead of `jar`!
+	gameVersions = [mc_publish_version] // Must be an array, even with only one version
+	loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+	dependencies {
+		required.version("fabricloader", ">=0.15.0")
+		required.version("architectury", ">=11.0.8 <=11.1.17")
+		required.version("resourcefullib", ">=2.4.0 <2.5.0")
+	}
+
+
+}

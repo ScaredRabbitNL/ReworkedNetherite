@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "reworked_netherite:raw_netherite_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "reworked_netherite:raw_netherite"
+  }
+}

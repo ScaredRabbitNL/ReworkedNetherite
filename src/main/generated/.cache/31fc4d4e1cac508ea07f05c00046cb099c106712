@@ -1,0 +1,6 @@
+// 1.20.4	2024-07-20T08:39:35.2431998	Reworked Netherite/Block Loot Tables
+3643013bb5eeb3446a4a4682efdc606db71380be data\reworked_netherite\loot_tables\blocks\end_stone_netherite_ore.json
+1eeffd9ade6f91e3d36166eee2701bb1492c9a99 data\reworked_netherite\loot_tables\blocks\stone_netherite_ore.json
+d24e54938782b42c4e9496dd281d4f6ace105d1b data\reworked_netherite\loot_tables\blocks\netherite_ore.json
+c373edb8a2691a37f78236beef880b0422dabefc data\reworked_netherite\loot_tables\blocks\deepslate_netherite_ore.json
+b306f3b69097bf4a916ded8cea41e6c9d70a172f data\reworked_netherite\loot_tables\blocks\raw_netherite_block.json

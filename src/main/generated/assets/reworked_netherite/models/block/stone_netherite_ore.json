@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "reworked_netherite:block/stone_netherite_ore"
+  }
+}

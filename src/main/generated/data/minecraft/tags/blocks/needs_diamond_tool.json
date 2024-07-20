@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "reworked_netherite:raw_netherite_block",
+    "reworked_netherite:stone_netherite_ore",
+    "reworked_netherite:deepslate_netherite_ore",
+    "reworked_netherite:netherite_ore",
+    "reworked_netherite:end_stone_netherite_ore"
+  ]
+}
