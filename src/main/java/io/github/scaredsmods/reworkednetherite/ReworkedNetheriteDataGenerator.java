@@ -5,13 +5,14 @@ import io.github.scaredsmods.reworkednetherite.datagen.client.RNWorldGenProvider
 import io.github.scaredsmods.reworkednetherite.datagen.server.RNBlockTagProvider;
 import io.github.scaredsmods.reworkednetherite.datagen.server.RNFluidTagProvider;
 import io.github.scaredsmods.reworkednetherite.datagen.server.RNLootTableProvider;
-import io.github.scaredsmods.reworkednetherite.datagen.server.RNRecipeGenerator;
+import io.github.scaredsmods.reworkednetherite.datagen.server.recipe.RNRecipeGenerator;
 import io.github.scaredsmods.reworkednetherite.world.feature.RNConfiguredFeatures;
 import io.github.scaredsmods.reworkednetherite.world.feature.RNPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.Registries;
+
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 
 public class ReworkedNetheriteDataGenerator implements DataGeneratorEntrypoint {
 	@Override
@@ -33,8 +34,8 @@ public class ReworkedNetheriteDataGenerator implements DataGeneratorEntrypoint {
 	}
 
 	@Override
-	public void buildRegistry(RegistrySetBuilder registryBuilder) {
-		registryBuilder.add(Registries.CONFIGURED_FEATURE, RNConfiguredFeatures::bootstrap);
-		registryBuilder.add(Registries.PLACED_FEATURE, RNPlacedFeatures::bootstrap);
+	public void buildRegistry(RegistryBuilder registryBuilder) {
+		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, RNConfiguredFeatures::bootstrap);
+		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, RNPlacedFeatures::bootstrap);
 	}
 }

@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_stone_netherite_ore": {
+    "has_netherite_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "reworked_netherite:stone_netherite_ore"
+              "minecraft:netherite_block"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:netherite_ingot_from_blasting_stone_netherite_ore"
+        "recipe": "minecraft:netherite_core"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_stone_netherite_ore"
+      "has_netherite_block"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:netherite_ingot_from_blasting_stone_netherite_ore"
+      "minecraft:netherite_core"
     ]
   }
 }

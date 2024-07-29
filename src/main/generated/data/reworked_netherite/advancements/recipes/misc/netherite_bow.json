@@ -6,7 +6,19 @@
         "items": [
           {
             "items": [
-              "reworked_netherite:raw_netherite"
+              "minecraft:netherite_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_stick": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stick"
             ]
           }
         ]
@@ -15,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "reworked_netherite:netherite_ingot_from_blasting_raw_netherite"
+        "recipe": "minecraft:netherite_bow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +35,13 @@
   "requirements": [
     [
       "has_the_recipe",
+      "has_stick",
       "has_netherite_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "reworked_netherite:netherite_ingot_from_blasting_raw_netherite"
+      "minecraft:netherite_bow"
     ]
   }
 }

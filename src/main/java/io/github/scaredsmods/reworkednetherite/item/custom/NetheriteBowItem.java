@@ -1,24 +1,27 @@
 package io.github.scaredsmods.reworkednetherite.item.custom;
 
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
+
+import net.minecraft.item.BowItem;
+import net.minecraft.item.ItemStack;
+
+import java.util.Set;
 
 public class NetheriteBowItem extends BowItem {
 
-    public NetheriteBowItem(Properties properties) {
+    public NetheriteBowItem(Settings properties) {
         super(properties);
-        properties.stacksTo(1);
+        properties.maxCount(1);
     }
 
+
+
     @Override
-    public boolean isFireResistant() {
+    public boolean isFireproof() {
         return true;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack) {
         return 40;
     }
-
-
 }

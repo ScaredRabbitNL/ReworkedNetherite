@@ -5,9 +5,10 @@ import io.github.scaredsmods.reworkednetherite.block.RNBlocks;
 import io.github.scaredsmods.reworkednetherite.item.RNItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Models;
+
 
 public class RNModelProvider extends FabricModelProvider {
 
@@ -17,22 +18,16 @@ public class RNModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
-
-        RNBlocks.BLOCKS.stream().map(RegistryEntry::get).forEach(blockStateModelGenerator::createTrivialCube);
-
+    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        RNBlocks.BLOCKS.stream().map(RegistryEntry::get).forEach(blockStateModelGenerator::registerSimpleCubeAll);
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
-
-        RNItems.BASIC_ITEM.stream().map(RegistryEntry::get).forEach(item -> itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM));
-        RNItems.BUCKETS.stream().map(RegistryEntry::get).forEach(item -> itemModelGenerator.generateFlatItem(item, ModelTemplates.FLAT_ITEM));
-
-
+    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+        RNItems.BASIC_ITEM.stream().map(RegistryEntry::get).forEach(item -> itemModelGenerator.register(item, Models.GENERATED));
+        RNItems.BUCKETS.stream().map(RegistryEntry::get).forEach(item -> itemModelGenerator.register(item, Models.GENERATED));
 
     }
-
 
 
 }

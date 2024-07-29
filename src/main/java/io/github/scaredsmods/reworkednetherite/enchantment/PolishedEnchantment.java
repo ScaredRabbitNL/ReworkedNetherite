@@ -2,47 +2,42 @@ package io.github.scaredsmods.reworkednetherite.enchantment;
 
 
 import io.github.scaredsmods.reworkednetherite.item.custom.HammerItem;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.DamageEnchantment;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.enchantment.DamageEnchantment;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentTarget;
+import net.minecraft.entity.*;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+
 
 public class PolishedEnchantment extends Enchantment {
 
-    public static final int ALL = 0;
-    public static final int UNDEAD = 1;
-    public static final int ARTHROPODS = 2;
-    private static final String[] NAMES = new String[]{"all", "undead", "arthropods"};
-    private static final int[] MIN_COST = new int[]{1, 5, 5};
-    private static final int[] LEVEL_COST = new int[]{11, 8, 8};
-    private static final int[] LEVEL_COST_SPAN = new int[]{20, 20, 20};
-    private final int type;
+    public static final int ALL_INDEX = 0;
+    public static final int UNDEAD_INDEX = 1;
+    public static final int ARTHROPODS_INDEX = 2;
+    private static final String[] TYPE_NAMES = new String[]{"all", "undead", "arthropods"};
+    private static final int[] BASE_POWERS = new int[]{1, 5, 5};
+    private static final int[] POWERS_PER_LEVEL = new int[]{11, 8, 8};
+    private static final int[] MIN_MAX_POWER_DIFFERENCES = new int[]{20, 20, 20};
+    public final int typeIndex;
 
-
-
-
-
-
-    public PolishedEnchantment(Rarity rarity, int type, EquipmentSlot ... applicableSlots) {
-        super(rarity, EnchantmentCategory.WEAPON, applicableSlots);
-        this.type = type;
-
+    public PolishedEnchantment(Enchantment.Rarity weight, int typeIndex, EquipmentSlot... slots) {
+        super(weight, EnchantmentTarget.WEAPON, slots);
+        this.typeIndex = typeIndex;
     }
 
     @Override
-    public int getMinCost(int level) {
-        return MIN_COST[this.type] + (level - 1) * LEVEL_COST[this.type];
+    public int getMinPower(int level) {
+        return BASE_POWERS[this.typeIndex] + (level - 1) * POWERS_PER_LEVEL[this.typeIndex];
     }
 
     @Override
-    public int getMaxCost(int level) {
-        return this.getMinCost(level) + LEVEL_COST_SPAN[this.type];
+    public int getMaxPower(int level) {
+        return this.getMinPower(level) + MIN_MAX_POWER_DIFFERENCES[this.typeIndex];
     }
 
     @Override
@@ -51,88 +46,70 @@ public class PolishedEnchantment extends Enchantment {
     }
 
     @Override
-    public float getDamageBonus(int level, MobType type) {
-        if (this.type == 0) {
-            return 1.0f + (float)Math.max(0, level - 1) * 0.5f;
+    public float getAttackDamage(int level, EntityGroup group) {
+        if (this.typeIndex == 0) {
+            return 1.0F + (float)Math.max(0, level - 1) * 0.5F;
+        } else if (this.typeIndex == 1 && group == EntityGroup.UNDEAD) {
+            return (float)level * 2.5F;
+        } else {
+            return this.typeIndex == 2 && group == EntityGroup.ARTHROPOD ? (float)level * 2.5F : 0.0F;
         }
-        if (this.type == 1 && type == MobType.UNDEAD) {
-            return (float)level * 2.5f;
-        }
-        if (this.type == 2 && type == MobType.ARTHROPOD) {
-            return (float)level * 2.5f;
-        }
-        return 0.0f;
     }
 
     @Override
-    public boolean checkCompatibility(Enchantment other) {
-
-
-
-        return !(other instanceof PolishedEnchantment) && !(other instanceof DamageEnchantment);
-
-
-
-    }
-
-
-    @Override
-    public boolean canEnchant(ItemStack stack) {
-        if (stack.getItem() instanceof AxeItem) {
-            return true;
-        }
-
-
-        return stack.getItem() instanceof HammerItem;
+    public boolean canAccept(Enchantment other) {
+        return !(other instanceof DamageEnchantment);
     }
 
     @Override
-    public void doPostAttack(LivingEntity attacker, Entity target, int level) {
-        if (target instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity)target;
-            if (this.type == 2 && level > 0 && livingEntity.getMobType() == MobType.ARTHROPOD) {
-                int i = 20 + attacker.getRandom().nextInt(10 * level);
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, i, 3));
-            }
-        }
-        if(!attacker.level().isClientSide()) {
-            ServerLevel world = ((ServerLevel) attacker.level());
-            BlockPos position = target.blockPosition();
-
-            if(level == 1) {
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-            }
-
-            if(level == 2) {
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-            }
-
-            if (level == 3) {
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-            }
-            if (level == 4) {
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-            }
-            if (level == 5) {
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-                EntityType.LIGHTNING_BOLT.spawn(world, position, MobSpawnType.TRIGGERED).setSecondsOnFire(0);
-            }
-
-
-        }
-
+    public boolean isAcceptableItem(ItemStack stack) {
+        return stack.getItem() instanceof AxeItem || super.isAcceptableItem(stack);
     }
 
+    @Override
+    public void onTargetDamaged(LivingEntity user, Entity target, int level) {
+        if (target instanceof LivingEntity livingEntity && this.typeIndex == 2 && level > 0 && livingEntity.getGroup() == EntityGroup.ARTHROPOD) {
+            int i = 20 + user.getRandom().nextInt(10 * level);
+            livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, i, 3));
+            if(!user.getWorld().isClient()) {
+                ServerWorld world = ((ServerWorld) user.getWorld());
+                BlockPos position = target.getBlockPos();
+
+                if(level == 1) {
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                }
+
+                if(level == 2) {
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                }
+
+                if (level == 3) {
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                }
+                if (level == 4) {
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                }
+                if (level == 5) {
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                    EntityType.LIGHTNING_BOLT.spawn(world, position, SpawnReason.TRIGGERED).setOnFire(false);
+                }
+
+
+            }
+
+        }
+    }
 }
+
 
 
 

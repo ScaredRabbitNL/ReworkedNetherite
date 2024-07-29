@@ -6,8 +6,6 @@ import io.github.scaredsmods.reworkednetherite.fluid.RNLiquids;
 import io.github.scaredsmods.reworkednetherite.item.RNItems;
 import io.github.scaredsmods.reworkednetherite.world.gen.RNWorldGeneration;
 import net.fabricmc.api.ModInitializer;
-
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +25,7 @@ public class ReworkedNetherite implements ModInitializer {
 		RNEnchantments.ENCHANTMENTS.init();
 		RNLiquids.FLUIDS.init();
 		RNWorldGeneration.generateWorldGeneration();
+
 
 
 

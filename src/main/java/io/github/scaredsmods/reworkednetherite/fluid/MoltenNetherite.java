@@ -2,24 +2,24 @@ package io.github.scaredsmods.reworkednetherite.fluid;
 
 import io.github.scaredsmods.reworkednetherite.block.RNBlocks;
 import io.github.scaredsmods.reworkednetherite.item.RNItems;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.item.Item;
+import net.minecraft.state.StateManager;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.state.property.Properties;
 
-public class MoltenNetherite extends FlowingFluid {
+public class MoltenNetherite extends FlowableFluid {
 
 
     @Override
@@ -28,76 +28,83 @@ public class MoltenNetherite extends FlowingFluid {
     }
 
     @Override
-    public Fluid getSource() {
+    public Fluid getStill() {
         return RNLiquids.SOURCE_MOLTEN_NETHERITE.get();
     }
 
 
 
     @Override
-    public boolean isSame(Fluid fluid) {
-        return fluid == getSource() || fluid == getFlowing();
+    public boolean matchesType(Fluid fluid) {
+        return fluid == getStill() || fluid == getFlowing();
     }
 
+
     @Override
-    protected boolean canConvertToSource(Level level) {
+    protected boolean isInfinite(World world) {
         return false;
     }
 
     @Override
-    protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
-        final BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
-        Block.dropResources(state, level, pos, blockEntity);
+    protected void beforeBreakingBlock(WorldAccess world, BlockPos pos, BlockState state) {
+        final BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+        Block.dropStacks(state, world, pos, blockEntity);
     }
 
     @Override
-    protected int getSlopeFindDistance(LevelReader level) {
-
-        if (level.dimensionType().equals(BuiltinDimensionTypes.NETHER)) {
+    protected int getFlowSpeed(WorldView world) {
+        if (world.getDimension().equals(DimensionTypes.THE_NETHER_ID)) {
             return 6;
         }else {
             return 4;
         }
-
     }
 
+
+
     @Override
-    protected int getDropOff(LevelReader level) {
+    protected int getLevelDecreasePerBlock(WorldView level) {
         return 1;
     }
 
+
+
     @Override
-    public Item getBucket() {
+    public Item getBucketItem() {
         return RNItems.MOLTEN_NETHERITE_BUCKET.get();
     }
 
     @Override
-    protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
+    protected boolean canBeReplacedWith(FluidState state, BlockView level, BlockPos pos, Fluid fluid, Direction direction) {
         return false;
     }
 
     @Override
-    public int getTickDelay(LevelReader level) {
+    public int getTickRate(WorldView level) {
         return 5;
     }
 
     @Override
-    protected float getExplosionResistance() {
+    protected float getBlastResistance() {
         return 100f;
     }
 
-    @Override
-    protected BlockState createLegacyBlock(FluidState state) {
-        return RNBlocks.MOLTEN_NETHERITE_BLOCK.get().defaultBlockState().setValue(BlockStateProperties.LEVEL, getLegacyLevel(state));
-    }
+
 
     @Override
-    public boolean isSource(FluidState state) {
+    protected BlockState toBlockState(FluidState state) {
+        return RNBlocks.MOLTEN_NETHERITE_BLOCK.get().getDefaultState().with(Properties.LEVEL_15, getBlockStateLevel(state));
+    }
+
+
+
+    @Override
+    public boolean isStill(FluidState state) {
         return false;
     }
 
     @Override
-    public int getAmount(FluidState state) {
+    public int getLevel(FluidState state) {
         return 0;
     }
 
@@ -105,15 +112,16 @@ public class MoltenNetherite extends FlowingFluid {
     public static class Flowing extends MoltenNetherite {
 
         @Override
-        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
-            super.createFluidStateDefinition(builder);
+        protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
+            super.appendProperties(builder);
             builder.add(LEVEL);
         }
 
 
+
         @Override
-        public int getAmount(FluidState state) {
-            return state.getValue(LEVEL);
+        public int getLevel(FluidState state) {
+            return state.get(LEVEL);
         }
 
 
@@ -123,14 +131,14 @@ public class MoltenNetherite extends FlowingFluid {
 
 
         @Override
-        public int getAmount(FluidState state) {
+        public int getLevel(FluidState state) {
             return 8;
         }
 
 
 
         @Override
-        public boolean isSource(FluidState state) {
+        public boolean isStill(FluidState state) {
             return true;
         }
     }

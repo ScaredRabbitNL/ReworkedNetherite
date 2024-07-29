@@ -5,8 +5,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.util.Identifier;
 
 public final class ReworkedNetheriteClientFabric implements ClientModInitializer {
     @Override
@@ -16,12 +16,12 @@ public final class ReworkedNetheriteClientFabric implements ClientModInitializer
 
         FluidRenderHandlerRegistry.INSTANCE.register(RNLiquids.SOURCE_MOLTEN_NETHERITE.get(), RNLiquids.FLOWING_NETHERITE.get(),
                 new SimpleFluidRenderHandler(
-                        new ResourceLocation("minecraft:block/water_still"),
-                        new ResourceLocation("minecraft:block/water_flow"),
+                        new Identifier("minecraft:block/water_still"),
+                        new Identifier("minecraft:block/water_flow"),
                         0x3f3138
                 ));
 
-        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(),
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 RNLiquids.SOURCE_MOLTEN_NETHERITE.get(), RNLiquids.FLOWING_NETHERITE.get());
     }
 }

@@ -1,28 +1,32 @@
 package io.github.scaredsmods.reworkednetherite.item.custom;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CampfireBlock;
+import net.minecraft.block.PillarBlock;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
-public class HammerItem extends DiggerItem {
+public class HammerItem extends MiningToolItem {
 
-    public HammerItem(Tier tier, Float damage) {
-        super(damage, -2.8f, tier, BlockTags.MINEABLE_WITH_PICKAXE, new Properties().stacksTo(1).fireResistant());
+    public HammerItem(ToolMaterial toolMaterial, Float damage) {
+        super(damage, -2.8f, toolMaterial, BlockTags.PICKAXE_MINEABLE, new Settings().maxCount(1).fireproof());
 
 
     }
@@ -32,39 +36,42 @@ public class HammerItem extends DiggerItem {
 
 
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
+    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         return 12.5F;
     }
 
+
+
+
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        Player player = context.getPlayer();
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World level = context.getWorld();
+        BlockPos pos = context.getBlockPos();
+        PlayerEntity player = context.getPlayer();
         BlockState blockState = level.getBlockState(pos);
 
         BlockState resultToSet = null;
 
         final var strippedResult = BLOCK_STRIPPING_MAP.get(blockState.getBlock());
         if (strippedResult != null) {
-            level.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
-            resultToSet = strippedResult.defaultBlockState().setValue(RotatedPillarBlock.AXIS,
-                    blockState.getValue(RotatedPillarBlock.AXIS));
-        } else if (context.getClickedFace() != Direction.DOWN) {
+            level.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            resultToSet = strippedResult.getDefaultState().with(PillarBlock.AXIS,
+                    blockState.get(PillarBlock.AXIS));
+        } else if (context.getSide() != Direction.DOWN) {
             final var foundResult = SHOVEL_LOOKUP.get(blockState.getBlock());
-            if (foundResult != null && level.getBlockState(pos.above()).isAir()) {
-                level.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
+            if (foundResult != null && level.getBlockState(pos.up()).isAir()) {
+                level.playSound(player, pos, SoundEvents.ITEM_SHOVEL_FLATTEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 resultToSet = foundResult;
-            } else if (blockState.getBlock() instanceof CampfireBlock && blockState.getValue(CampfireBlock.LIT))
-                resultToSet = blockState.setValue(CampfireBlock.LIT, false);
+            } else if (blockState.getBlock() instanceof CampfireBlock && blockState.get(CampfireBlock.LIT))
+                resultToSet = blockState.with(CampfireBlock.LIT, false);
         }
-        if (resultToSet == null) return InteractionResult.PASS;
-        if (!level.isClientSide()) {
-            level.setBlock(pos, resultToSet, 11);
-            if (player != null) context.getItemInHand().hurtAndBreak(1, (LivingEntity) player,
-                    (Consumer<LivingEntity>) p -> p.broadcastBreakEvent(context.getHand()));
+        if (resultToSet == null) return ActionResult.PASS;
+        if (!level.isClient()) {
+            level.setBlockState(pos, resultToSet, 11);
+            if (player != null) context.getPlayer().getInventory().getMainHandStack().damage(1, (LivingEntity) player,
+                    (Consumer<LivingEntity>) p -> p.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         }
-        return InteractionResult.SUCCESS;
+        return ActionResult.SUCCESS;
 
 
     }
@@ -74,10 +81,10 @@ public class HammerItem extends DiggerItem {
     private static final class Shovel extends ShovelItem {
 
         public static Map<Block, BlockState> getFlattenables() {
-            return ShovelItem.FLATTENABLES;
+            return ShovelItem.PATH_STATES;
         }
 
-        private Shovel(Tier tier, float f, float g, Properties properties) {
+        private Shovel(ToolMaterial tier, float f, float g, Settings properties) {
             super(tier, f, g, properties);
         }
     }
@@ -85,10 +92,10 @@ public class HammerItem extends DiggerItem {
 
     private static final class Axe extends AxeItem {
         public static Map<Block, Block> getStrippables() {
-            return AxeItem.STRIPPABLES;
+            return AxeItem.STRIPPED_BLOCKS;
         }
 
-        private Axe(Tier tier, float f, float g, Properties properties) {
+        private Axe(ToolMaterial tier, float f, float g, Settings properties) {
             super(tier, f, g, properties);
         }
     }

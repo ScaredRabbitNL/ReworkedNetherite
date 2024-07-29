@@ -1,4 +1,4 @@
-# 1.3.4-1.204
+# 1.3.4 (1.20.4 Update)
 
 ## Mod Info Changes
 - Rebranded to Reworked Netherite
@@ -9,6 +9,7 @@
 - Dropped support for Forge
 - Added support for NeoForge
 - Started using ResourcefulLib as a dependency
+- Renamed mod id to "reworked_netherite"
 ## Additions
 - Netherite Hammer 
 - Soul Crystal 

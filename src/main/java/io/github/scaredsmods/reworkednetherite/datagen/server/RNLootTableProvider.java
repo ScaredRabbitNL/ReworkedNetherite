@@ -5,15 +5,15 @@ import io.github.scaredsmods.reworkednetherite.block.RNBlocks;
 import io.github.scaredsmods.reworkednetherite.item.RNItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.ApplyBonusLootFunction;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+
 
 public class RNLootTableProvider extends FabricBlockLootTableProvider {
 
@@ -23,26 +23,25 @@ public class RNLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        add(RNBlocks.STONE_NETHERITE_ORE, createNetheriteOreDrops(RNBlocks.STONE_NETHERITE_ORE.get()));
-        add(RNBlocks.DEEPSLATE_NETHERITE_ORE, createNetheriteOreDrops(RNBlocks.DEEPSLATE_NETHERITE_ORE.get()));
-        add(RNBlocks.NETHERITE_ORE, createNetheriteOreDrops(RNBlocks.NETHERITE_ORE.get()));
-        add(RNBlocks.END_STONE_NETHERITE_ORE, createNetheriteOreDrops(RNBlocks.END_STONE_NETHERITE_ORE.get()));
-
-        dropSelf(RNBlocks.RAW_NETHERITE_BLOCK.get());
+        RNBlocks.ORES.stream().map(RegistryEntry::get).forEach(block -> addDrop(block, createNetheriteOreDrops(block)));
+        drops(RNBlocks.RAW_NETHERITE_BLOCK.get());
     }
 
-    protected LootTable.Builder createNetheriteOreDrops(Block block) {
-        return BlockLootSubProvider.createSilkTouchDispatchTable(block,
-                this.applyExplosionDecay(block,
-                        ((LootPoolSingletonContainer.Builder<?>)
-                                LootItem.lootTableItem(RNItems.RAW_NETHERITE.get()).
-                                        apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 3.0f))))
-                                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
+
+    public LootTable.Builder createNetheriteOreDrops(Block drop) {
+        return dropsWithSilkTouch(
+                drop,
+                this.applyExplosionDecay(
+                        drop,
+                        ItemEntry.builder(RNItems.RAW_NETHERITE.get())
+                                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2.0F, 5.0F)))
+                                .apply(ApplyBonusLootFunction.oreDrops(Enchantments.FORTUNE))
+                )
+        );
     }
 
-     void add(RegistryEntry<Block> block, LootTable.Builder builder) {
-        this.map.put(block.get().getLootTable(), builder);
-    }
+
+
 
 
 

@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "reworked_netherite:raw_netherite"
+              "minecraft:netherite_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "reworked_netherite:netherite_ingot_from_smelting_raw_netherite"
+        "recipe": "minecraft:flatten_netherite_ingot_from_netherite_ingot_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "reworked_netherite:netherite_ingot_from_smelting_raw_netherite"
+      "minecraft:flatten_netherite_ingot_from_netherite_ingot_stonecutting"
     ]
   }
 }

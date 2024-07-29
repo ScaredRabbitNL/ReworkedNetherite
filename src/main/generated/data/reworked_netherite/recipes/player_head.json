@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "reworked_netherite:netherite_core"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "LLL",
+    "RCR",
+    "LLL"
+  ],
+  "result": {
+    "item": "minecraft:player_head"
+  }
+}

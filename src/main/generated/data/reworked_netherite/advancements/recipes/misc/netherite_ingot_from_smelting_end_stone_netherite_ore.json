@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_netherite_ingot": {
+    "has_end_stone_netherite_ore": {
       "conditions": {
         "items": [
           {
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "reworked_netherite:netherite_ingot_from_smelting_end_stone_netherite_ore"
+        "recipe": "minecraft:netherite_ingot_from_smelting_end_stone_netherite_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_netherite_ingot"
+      "has_end_stone_netherite_ore"
     ]
   ],
   "rewards": {
     "recipes": [
-      "reworked_netherite:netherite_ingot_from_smelting_end_stone_netherite_ore"
+      "minecraft:netherite_ingot_from_smelting_end_stone_netherite_ore"
     ]
   }
 }

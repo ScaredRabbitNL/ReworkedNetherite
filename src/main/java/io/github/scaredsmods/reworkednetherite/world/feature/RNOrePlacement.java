@@ -1,21 +1,22 @@
 package io.github.scaredsmods.reworkednetherite.world.feature;
 
-import net.minecraft.world.level.levelgen.placement.*;
+
+
+import net.minecraft.world.gen.placementmodifier.*;
 
 import java.util.List;
 
 public class RNOrePlacement {
 
-
-    public static List<PlacementModifier> orePlacement(PlacementModifier placementModifier1, PlacementModifier placementModifier2) {
-        return List.of(placementModifier1, InSquarePlacement.spread(), placementModifier2, BiomeFilter.biome());
+    public static List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier heightModifier) {
+        return List.of(countModifier, SquarePlacementModifier.of(), heightModifier, BiomePlacementModifier.of());
     }
 
-    public static List<PlacementModifier> commonOrePlacement(int pCount, PlacementModifier pHeightRange) {
-        return orePlacement(CountPlacement.of(pCount), pHeightRange);
+    public static List<PlacementModifier> modifiersWithCount(int count, PlacementModifier heightModifier) {
+        return modifiers(CountPlacementModifier.of(count), heightModifier);
     }
 
-    public static List<PlacementModifier> rareOrePlacement(int pChance, PlacementModifier pHeightRange) {
-        return orePlacement(RarityFilter.onAverageOnceEvery(pChance), pHeightRange);
+    public static List<PlacementModifier> modifiersWithRarity(int chance, PlacementModifier heightModifier) {
+        return modifiers(RarityFilterPlacementModifier.of(chance), heightModifier);
     }
 }
