@@ -1,12 +1,24 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_raw_netherite_block": {
+    "has_netherite_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "reworked_netherite:raw_netherite_block"
+              "minecraft:netherite_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_stick": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stick"
             ]
           }
         ]
@@ -15,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:raw_netherite"
+        "recipe": "reworked_netherite:netherite_bow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +35,13 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_raw_netherite_block"
+      "has_stick",
+      "has_netherite_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:raw_netherite"
+      "reworked_netherite:netherite_bow"
     ]
   }
 }

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "reworked_netherite:netherite_core"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "F": {
+      "item": "reworked_netherite:flatten_netherite_ingot"
+    },
+    "M": {
+      "item": "minecraft:magma_cream"
+    },
+    "S": {
+      "item": "reworked_netherite:soul_crystal"
+    },
+    "W": {
+      "item": "reworked_netherite:wither_bone"
+    }
+  },
+  "pattern": [
+    "EFS",
+    "FCF",
+    "WFM"
+  ],
+  "result": {
+    "item": "reworked_netherite:netherite_hammer"
+  }
+}

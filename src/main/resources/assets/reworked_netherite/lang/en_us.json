@@ -15,6 +15,8 @@
   "block.reworked_netherite.stone_netherite_ore": "Stone Netherite Ore",
   "block.reworked_netherite.raw_netherite_block": "Raw Netherite Block",
 
+  "fluid_type.reworked_netherite.molten_netherite_fluid": "Molten Netherite",
+
   "itemGroup.reworked_netherite.blocks": "Reworked Netherite: Blocks",
   "itemGroup.reworked_netherite.items": "Reworked Netherite: Items",
   "item.mod.reworked_netherite.captured": "The entitiy their soul has been absorbed by the crystal you are holding...",

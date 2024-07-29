@@ -38,6 +38,7 @@ public class DataGenerator {
         generator.addProvider(event.includeClient(), new RNItemStateGenerator(packOutput, existingFileHelper));
         generator.addProvider(event.includeServer(), new RNRecipeGenerator(packOutput));
         generator.addProvider(event.includeClient(), new RNFluidTagGenerator(packOutput, lookupProvider, existingFileHelper));
+
     }
 
 

@@ -2,7 +2,7 @@
   "type": "minecraft:blasting",
   "category": "misc",
   "cookingtime": 100,
-  "experience": 1.5,
+  "experience": 0.1,
   "ingredient": {
     "item": "reworked_netherite:stone_netherite_ore"
   },

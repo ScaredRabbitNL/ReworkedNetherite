@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 4,
+  "ingredient": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": "reworked_netherite:flatten_netherite_ingot"
+}

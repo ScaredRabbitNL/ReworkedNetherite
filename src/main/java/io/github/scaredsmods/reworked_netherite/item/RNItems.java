@@ -22,7 +22,7 @@ public class RNItems {
 
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, ReworkedNetherite.MOD_ID);
     public static final ResourcefulRegistry<Item> BASIC_ITEM = ResourcefulRegistries.create(ITEMS);
-    public static final ResourcefulRegistry<Item> BLOCK_ITEMS = ResourcefulRegistries.create(ITEMS);
+    public static final ResourcefulRegistry<Item> BLOCK_ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, ReworkedNetherite.MOD_ID);
     public static final ResourcefulRegistry<Item> MODEL_ITEM = ResourcefulRegistries.create(ITEMS);
 
 
@@ -30,7 +30,7 @@ public class RNItems {
     public static final ResourcefulRegistry<CreativeModeTab> TABS = ResourcefulRegistries.create(BuiltInRegistries.CREATIVE_MODE_TAB, ReworkedNetherite.MOD_ID);
     public static final RegistryEntry<CreativeModeTab> ITEMS_TAB = TABS.register("items", () -> new ResourcefulCreativeModeTab(new ResourceLocation(ReworkedNetherite.MOD_ID, "items"))
             .setItemIcon(() -> RNItems.RAW_NETHERITE.get())
-            .addRegistry(BASIC_ITEM)
+            .addRegistry(ITEMS)
             .build());
 
     public static final RegistryEntry<CreativeModeTab> BLOCK_TAB = TABS.register("blocks", () -> new ResourcefulCreativeModeTab(new ResourceLocation(ReworkedNetherite.MOD_ID, "blocks"))

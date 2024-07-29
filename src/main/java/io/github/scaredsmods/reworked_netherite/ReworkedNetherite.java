@@ -36,6 +36,7 @@ public final class ReworkedNetherite {
         RNBlocks.LIQUIDS.init();
         RNItems.ITEMS.init();
         RNItems.TABS.init();
+        RNItems.BLOCK_ITEMS.init();
         RNEnchantments.ENCHANTMENTS.init();
         RNFluids.FLUIDS.init();
         RNFluidTypes.FLUID_TYPES.init();

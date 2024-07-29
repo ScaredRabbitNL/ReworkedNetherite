@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_raw_netherite": {
+    "has_netherite_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "reworked_netherite:raw_netherite"
+              "minecraft:netherite_block"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:raw_netherite_block"
+        "recipe": "reworked_netherite:netherite_core"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_raw_netherite"
+      "has_netherite_block"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:raw_netherite_block"
+      "reworked_netherite:netherite_core"
     ]
   }
 }
